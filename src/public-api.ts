@@ -35,3 +35,4 @@ export * from './lib/paginator/paginator.component'
 export * from './lib/expansion/expansion-panel.component';
 export * from './lib/time/time.component'
 export * from './lib/flipper/flipper.component'
+export * from './lib/topbar/topbar.component'
