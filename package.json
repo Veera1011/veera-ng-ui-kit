@@ -1,6 +1,6 @@
 {
   "name": "veera-ng-ui-kit",
-  "version": "1.0.23",
+  "version": "1.0.25",
   "description": "Angular component library",
   "license": "MIT",
   "peerDependencies": {
