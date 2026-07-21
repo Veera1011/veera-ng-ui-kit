@@ -36,3 +36,5 @@ export * from './lib/expansion/expansion-panel.component';
 export * from './lib/time/time.component'
 export * from './lib/flipper/flipper.component'
 export * from './lib/topbar/topbar.component'
+export * from './lib/timeline/timeline.component'
+export * from './lib/carousel/carousel.component'
