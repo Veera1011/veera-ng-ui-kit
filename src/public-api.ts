@@ -38,3 +38,5 @@ export * from './lib/flipper/flipper.component'
 export * from './lib/topbar/topbar.component'
 export * from './lib/timeline/timeline.component'
 export * from './lib/carousel/carousel.component'
+export * from './lib/skeleton/skeleton.component';
+export * from './lib/banner/banner.component';
