@@ -21,6 +21,7 @@ export * from './lib/progress/progress.component';
 export * from './lib/card/card.component';
 export * from './lib/badge/badge.component';
 export * from './lib/avatar/avatar.component';
+export * from './lib/mobileView/mobile-preview.component'
 export * from './lib/input/input.component'
 export * from './lib/datepicker/datepicker.component'
 export * from './lib/daterangepicker/daterangepicker.component'
@@ -40,3 +41,4 @@ export * from './lib/timeline/timeline.component'
 export * from './lib/carousel/carousel.component'
 export * from './lib/skeleton/skeleton.component';
 export * from './lib/banner/banner.component';
+
