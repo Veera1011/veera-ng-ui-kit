@@ -1,4 +1,3 @@
-
 import {
   Component,
   EventEmitter,
@@ -49,20 +48,22 @@ export interface SelectOption {
 
       <div class="ui-select-panel" *ngIf="opened">
 
-        <div
-          *ngFor="let option of options"
-          class="ui-option"
-          [class.selected]="option.value === value"
-          (click)="select(option)">
+        <div class="ui-select-list">
+          <div
+            *ngFor="let option of options"
+            class="ui-option"
+            [class.selected]="option.value === value"
+            (click)="select(option)">
 
-          <span>{{ option.label }}</span>
+            <span>{{ option.label }}</span>
 
-          <span
-            class="check"
-            *ngIf="option.value === value">
-            ✓
-          </span>
+            <span
+              class="check"
+              *ngIf="option.value === value">
+              ✓
+            </span>
 
+          </div>
         </div>
 
       </div>
@@ -140,6 +141,14 @@ export interface SelectOption {
         0 4px 10px rgba(0,0,0,.04);
       z-index: 1000;
       animation: dropdown .15s ease;
+    }
+
+    /* Scrolling happens in here, not on the rounded panel itself.
+       Mixing overflow-y:auto with border-radius on the same element
+       is what was causing the bottom corners to render flat/clipped
+       once the list had more options than fit — moving the scroll
+       to this inner, non-rounded wrapper fixes it. */
+    .ui-select-list {
       max-height: 250px;
       overflow-y: auto;
     }
@@ -152,6 +161,7 @@ export interface SelectOption {
       justify-content: space-between;
       transition: all .15s ease;
       font-size: 14px;
+      background :var var(--color-primary-500, #f97316);
     }
 
     .ui-option:hover {
@@ -160,7 +170,7 @@ export interface SelectOption {
 
     .ui-option.selected {
       background: #ffedd5;
-      color: #ea580c;
+      color:var var(--color-primary-500, #f97316);
       font-weight: 600;
     }
 
@@ -168,11 +178,11 @@ export interface SelectOption {
       font-size: 13px;
     }
 
-    .ui-select-panel::-webkit-scrollbar {
+    .ui-select-list::-webkit-scrollbar {
       width: 6px;
     }
 
-    .ui-select-panel::-webkit-scrollbar-thumb {
+    .ui-select-list::-webkit-scrollbar-thumb {
       background: #d1d5db;
       border-radius: 999px;
     }

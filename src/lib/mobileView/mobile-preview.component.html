@@ -12,61 +12,55 @@
         <span class="ui-mp-topbar-title">Mobile Preview</span>
         <span class="ui-mp-topbar-sub">Preview how your page looks on mobile devices</span>
       </div>
-    </div>
 
-    <!-- Device Selection Tabs -->
-    <div class="ui-mp-device-tabs">
-      <button
-        type="button"
-        *ngFor="let d of devices"
-        class="ui-mp-device-tab"
-        [class.active]="d.id === selectedDevice.id"
-        (click)="selectDevice(d)"
-        [attr.title]="'Preview as ' + d.name + ' (' + d.width + ' × ' + d.height + ')'"
-      >
-        <span class="ui-mp-device-tab-text">
-          <span class="ui-mp-device-name">{{ d.name }}</span>
-          <span class="ui-mp-device-dim">{{ d.width }} × {{ d.height }}</span>
-        </span>
-      </button>
+      <!-- Device Selector -->
+      <div class="ui-mp-device-select" uiTooltip="Choose a device to preview">
+        <ui-select
+          [options]="deviceOptions"
+          [value]="selectedDevice.id"
+          (valueChange)="onDeviceOptionSelected($event)"
+          placeholder="Select device"
+        ></ui-select>
+      </div>
     </div>
 
     <!-- Action Controls -->
     <div class="ui-mp-topbar-right">
-      <button
-        type="button"
-        class="ui-mp-icon-btn"
+      <ui-button
+        variant="secondary"
+        size="sm"
+        [iconOnly]="true"
         (click)="toggleFullscreen()"
-        [attr.title]="isFullscreen ? 'Exit full screen' : 'Full screen'"
+        [uiTooltip]="isFullscreen ? 'Exit full screen' : 'Full screen'"
         [attr.aria-label]="isFullscreen ? 'Exit full screen' : 'Full screen'"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
           <path d="M9 3H5a2 2 0 00-2 2v4M15 3h4a2 2 0 012 2v4M9 21H5a2 2 0 01-2-2v-4M15 21h4a2 2 0 002-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </button>
-      <button
-        type="button"
-        class="ui-mp-btn"
+      </ui-button>
+      <ui-button
+        variant="secondary"
+        size="sm"
         (click)="rotate()"
-        title="Rotate device orientation"
+        uiTooltip="Rotate device orientation"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
           <path d="M4 4v6h6M20 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M20 10a8 8 0 00-14-5M4 14a8 8 0 0014 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         Rotate
-      </button>
-      <button
-        type="button"
-        class="ui-mp-btn ui-mp-btn-primary"
+      </ui-button>
+      <ui-button
+        variant="primary"
+        size="sm"
         (click)="close()"
-        title="Close preview mode"
+        uiTooltip="Close preview mode"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
           <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
         </svg>
         Close Preview
-      </button>
+      </ui-button>
     </div>
   </div>
 
@@ -88,13 +82,13 @@
             type="button"
             [class.active]="orientation === 'portrait'"
             (click)="setOrientation('portrait')"
-            title="Portrait mode"
+            uiTooltip="Portrait mode"
           >Portrait</button>
           <button
             type="button"
             [class.active]="orientation === 'landscape'"
             (click)="setOrientation('landscape')"
-            title="Landscape mode"
+            uiTooltip="Landscape mode"
           >Landscape</button>
         </div>
       </div>
@@ -109,7 +103,7 @@
             max="150"
             step="5"
             [(ngModel)]="zoom"
-            title="Adjust zoom level"
+            uiTooltip="Adjust zoom level"
           >
           <span class="ui-mp-zoom-val">{{ zoom }}%</span>
         </div>
@@ -118,54 +112,39 @@
       <div class="ui-mp-option-group">
         <label class="ui-mp-option-label">Show</label>
         <div class="ui-mp-toggle-row">
-          <span class="ui-mp-toggle-text">Device Frame</span>
-          <button
-            type="button"
-            class="ui-mp-switch"
-            [class.on]="showDeviceFrame"
-            (click)="showDeviceFrame = !showDeviceFrame"
-            [attr.title]="showDeviceFrame ? 'Hide device frame' : 'Show device frame'"
-          >
-            <span class="ui-mp-switch-knob"></span>
-          </button>
+          <ui-toggle
+            [checked]="showDeviceFrame"
+            (checkedChange)="showDeviceFrame = $event"
+            [uiTooltip]="showDeviceFrame ? 'Hide device frame' : 'Show device frame'"
+          >Device Frame</ui-toggle>
         </div>
         <div class="ui-mp-toggle-row">
-          <span class="ui-mp-toggle-text">Status Bar</span>
-          <button
-            type="button"
-            class="ui-mp-switch"
-            [class.on]="showStatusBar"
-            (click)="showStatusBar = !showStatusBar"
-            [attr.title]="showStatusBar ? 'Hide status bar' : 'Show status bar'"
-          >
-            <span class="ui-mp-switch-knob"></span>
-          </button>
+          <ui-toggle
+            [checked]="showStatusBar"
+            (checkedChange)="showStatusBar = $event"
+            [uiTooltip]="showStatusBar ? 'Hide status bar' : 'Show status bar'"
+          >Status Bar</ui-toggle>
         </div>
         <div class="ui-mp-toggle-row">
-          <span class="ui-mp-toggle-text">Scroll Indicator</span>
-          <button
-            type="button"
-            class="ui-mp-switch"
-            [class.on]="showScrollIndicator"
-            (click)="showScrollIndicator = !showScrollIndicator"
-            [attr.title]="showScrollIndicator ? 'Hide scroll indicator' : 'Show scroll indicator'"
-          >
-            <span class="ui-mp-switch-knob"></span>
-          </button>
+          <ui-toggle
+            [checked]="showScrollIndicator"
+            (checkedChange)="showScrollIndicator = $event"
+            [uiTooltip]="showScrollIndicator ? 'Hide scroll indicator' : 'Show scroll indicator'"
+          >Scroll Indicator</ui-toggle>
         </div>
       </div>
 
-      <button
-        type="button"
-        class="ui-mp-reset-btn"
+      <ui-button
+        variant="secondary"
+        size="sm"
         (click)="resetDefaults()"
-        title="Reset options to default"
+        uiTooltip="Reset options to default"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M4 4v6h6M4 10a8 8 0 1114 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         Reset to Default
-      </button>
+      </ui-button>
     </div>
 
     <!-- Center Stage -->
@@ -226,14 +205,14 @@
 
   <!-- Bottom Floating Zoom Bar -->
   <div class="ui-mp-zoom-controls">
-    <button type="button" (click)="adjustZoom(-10)" title="Zoom out" aria-label="Zoom out">
+    <ui-button variant="ghost" size="sm" [iconOnly]="true" (click)="adjustZoom(-10)" uiTooltip="Zoom out" aria-label="Zoom out">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-    </button>
-    <button type="button" (click)="fitToScreen()" title="Fit to screen" aria-label="Fit to screen">
+    </ui-button>
+    <ui-button variant="ghost" size="sm" [iconOnly]="true" (click)="fitToScreen()" uiTooltip="Fit to screen" aria-label="Fit to screen">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 3H5a2 2 0 00-2 2v4M15 3h4a2 2 0 012 2v4M9 21H5a2 2 0 01-2-2v-4M15 21h4a2 2 0 002-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button type="button" (click)="adjustZoom(10)" title="Zoom in" aria-label="Zoom in">
+    </ui-button>
+    <ui-button variant="ghost" size="sm" [iconOnly]="true" (click)="adjustZoom(10)" uiTooltip="Zoom in" aria-label="Zoom in">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-    </button>
+    </ui-button>
   </div>
 </div>

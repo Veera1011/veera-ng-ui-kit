@@ -15,6 +15,10 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
+import { ToggleComponent } from '../toggle/toggle.component';
+import { SelectComponent, SelectOption } from '../select/select.component';
+import { TooltipDirective } from '../tooltip/tooltip.directive';
 
 export interface PreviewDevice {
   id: string;
@@ -34,7 +38,7 @@ const DEFAULT_DEVICES: PreviewDevice[] = [
 @Component({
   selector: 'ui-mobile-preview',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ButtonComponent, ToggleComponent, SelectComponent, TooltipDirective],
   templateUrl: './mobile-preview.component.html',
   styleUrls: ['./mobile-preview.component.scss']
 })
@@ -135,9 +139,23 @@ export class MobilePreviewComponent implements OnInit, AfterViewInit, OnDestroy 
     return (this.frameHeight + pad) * (this.zoom / 100);
   }
 
+  get deviceOptions(): SelectOption[] {
+    return this.devices.map(d => ({
+      label: `${d.name} (${d.width} × ${d.height})`,
+      value: d.id
+    }));
+  }
+
   selectDevice(d: PreviewDevice): void {
     this.selectedDevice = d;
     this.fitToScreen();
+  }
+
+  onDeviceOptionSelected(id: string): void {
+    const found = this.devices.find(d => d.id === id);
+    if (found) {
+      this.selectDevice(found);
+    }
   }
 
   setOrientation(o: 'portrait' | 'landscape'): void {
