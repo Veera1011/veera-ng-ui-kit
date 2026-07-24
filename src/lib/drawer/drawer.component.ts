@@ -1,6 +1,6 @@
 import {
   Component, ElementRef, EventEmitter, HostListener, Input,
-  OnChanges, OnDestroy, Output, ViewChild
+  OnChanges, OnDestroy, Output, SimpleChanges, ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -222,26 +222,39 @@ export class DrawerComponent implements OnChanges, OnDestroy {
   private timer: any;
   private previouslyFocused: HTMLElement | null = null;
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    // Only react when the `open` input itself changes — not on every
+    // title/position/size/etc. change, which was re-triggering the
+    // mount/animation sequence unnecessarily.
+    if (!changes['open']) return;
+
     clearTimeout(this.timer);
 
     if (this.open) {
-      this.previouslyFocused = document.activeElement as HTMLElement;
-      this.mounted = true;
-      this.scrolled = false;
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        this.visible = true;
-        this.panelRef?.nativeElement.focus();
-      }));
+      this.show();
     } else if (this.mounted) {
-      this.visible = false;
-      document.body.style.overflow = '';
-      this.timer = setTimeout(() => {
-        this.mounted = false;
-        this.previouslyFocused?.focus?.();
-      }, 320);
+      this.hide();
     }
+  }
+
+  private show() {
+    this.previouslyFocused = document.activeElement as HTMLElement;
+    this.mounted = true;
+    this.scrolled = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      this.visible = true;
+      this.panelRef?.nativeElement.focus();
+    }));
+  }
+
+  private hide() {
+    this.visible = false;
+    document.body.style.overflow = '';
+    this.timer = setTimeout(() => {
+      this.mounted = false;
+      this.previouslyFocused?.focus?.();
+    }, 320);
   }
 
   ngOnDestroy() {
@@ -282,6 +295,14 @@ export class DrawerComponent implements OnChanges, OnDestroy {
   }
 
   close() {
+    if (!this.open) return;
+
+    // Drive the close animation ourselves — don't rely on the parent
+    // round-tripping the new value back into [open]. This is what makes
+    // the X button / backdrop / Escape work even if the consumer only
+    // has [open] bound one-way (no (openChange) listener at all).
+    this.open = false;
+    this.hide();
     this.openChange.emit(false);
   }
 }
